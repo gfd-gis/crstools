@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>444</width>
+    <height>467</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Chuyển hệ toạ độ và lưu file mới - GFD</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QListWidget" name="listWidget"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Hệ toạ độ các lớp đầu vào:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QComboBox" name="comboBox_in">
+       <item>
+        <property name="text">
+         <string>System</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 102</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 103</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 104</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 104.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 104.75</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 105</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 105.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 105.75</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 106</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 106.25</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 106.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 107</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 107.25</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 107.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 107.75</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 108</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 108.25</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 mui 3 KTT 108.5</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Hệ toạ độ các file đầu ra:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QComboBox" name="comboBox_out">
+       <item>
+        <property name="text">
+         <string>System</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>WGS 84 Lat/Long - EPSG:4326</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>UTM Zone 48N - EPGS:32648</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>UTM Zone 49N - EPGS:32649</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 102</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 103</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 104</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 104.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 104.75</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 105</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 105.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 105.75</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 106</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 106.25</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 106.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 107</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 107.25</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 107.5</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 107.75</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 108</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 108.25</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>VN-2000 Hoi nhap mui 3 KTT 108.5</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Định dạng file đầu ra:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QCheckBox" name="checkBox_esri">
+         <property name="text">
+          <string>ESRI shapefile</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_mi">
+         <property name="text">
+          <string>MapInfo</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="0">
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Chuyển và lưu</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
