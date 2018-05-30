@@ -21,10 +21,10 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication
+from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QVariant, QFileInfo
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QFileDialog, QTableWidgetItem
-from qgis.core import QgsProject, QgsVectorFileWriter
+from qgis.core import QgsProject, QgsVectorFileWriter, QgsVectorLayer
 from qgis.core import QgsCoordinateReferenceSystem as Hoh
 
 # Initialize Qt resources from file resources.py
@@ -203,183 +203,9 @@ class CRSTools:
     def check(self):
         self.dlg.hide()
 
-        # Declaration of coordinate systems - Taken from checkcoordinatesystem plugin
-
-        # VN2000 Noi bo mui 3
-        htd_103_nb = "+proj=tmerc +lat_0=0 +lon_0=103 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_104_nb = "+proj=tmerc +lat_0=0 +lon_0=104 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_104_5_nb = "+proj=tmerc +lat_0=0 +lon_0=104.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_104_75_nb = "+proj=tmerc +lat_0=0 +lon_0=104.75 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_105_nb = "+proj=tmerc +lat_0=0 +lon_0=105 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_105_5_nb = "+proj=tmerc +lat_0=0 +lon_0=105.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_105_75_nb = "+proj=tmerc +lat_0=0 +lon_0=105.75 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_106_nb = "+proj=tmerc +lat_0=0 +lon_0=106 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_106_25_nb = "+proj=tmerc +lat_0=0 +lon_0=106.25 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_106_5_nb = "+proj=tmerc +lat_0=0 +lon_0=106.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_107_nb = "+proj=tmerc +lat_0=0 +lon_0=107 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_107_25_nb = "+proj=tmerc +lat_0=0 +lon_0=107.25 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_107_5_nb = "+proj=tmerc +lat_0=0 +lon_0=107.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_107_75_nb = "+proj=tmerc +lat_0=0 +lon_0=107.75 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_108_nb = "+proj=tmerc +lat_0=0 +lon_0=108 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_108_25_nb = "+proj=tmerc +lat_0=0 +lon_0=108.25 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-        htd_108_5_nb = "+proj=tmerc +lat_0=0 +lon_0=108.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-
-        # VN2000 Hoi nhap mui 3
-        htd_103_hn = "+proj=tmerc +lat_0=0 +lon_0=103 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=-191.90441429,-39.30318279,-111.45032835,0.00928836," \
-                     "-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_104_hn = "+proj=tmerc +lat_0=0 +lon_0=104 +k=0.9999 +x_0=500000 +y_0=0 " \
-                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_104_5_hn = "+proj=tmerc +lat_0=0 +lon_0=104_5 +k=0.9999 +x_0=500000 +y_0=0 " \
-                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_104_75_hn = "+proj=tmerc +lat_0=0 +lon_0=104.75 +k=0.9999 +x_0=500000 +y_0=0 " \
-                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_105_hn = "+proj=tmerc +lat_0=0 +lon_0=105 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
-                     "+towgs84=-191.90441429,-39.30318279,-111.45032835,0.00928836," \
-                     "-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_105_5_hn = "+proj=tmerc +lat_0=0 +lon_0=105.5 +k=0.9999 +x_0=500000 +y_0=0 " \
-                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_105_75_hn = "+proj=tmerc +lat_0=0 +lon_0=105.75 +k=0.9999 +x_0=500000 +y_0=0 " \
-                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_106_hn = "+proj=tmerc +lat_0=0 +lon_0=106 +k=0.9999 +x_0=500000 +y_0=0 " \
-                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_106_25_hn = "+proj=tmerc +lat_0=0 +lon_0=106.25 +k=0.9999 +x_0=500000 +y_0=0 " \
-                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_106_5_hn = "+proj=tmerc +lat_0=0 +lon_0=106.5 +k=0.9999 +x_0=500000 +y_0=0 " \
-                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_107_hn = "+proj=tmerc +lat_0=0 +lon_0=107 +k=0.9999 +x_0=500000 +y_0=0 " \
-                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_107_25_hn = "+proj=tmerc +lat_0=0 +lon_0=107.25 +k=0.9999 +x_0=500000 +y_0=0 " \
-                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_107_5_hn = "+proj=tmerc +lat_0=0 +lon_0=107.5 +k=0.9999 +x_0=500000 +y_0=0 " \
-                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_107_75_hn = "+proj=tmerc +lat_0=0 +lon_0=107.75 +k=0.9999 +x_0=500000 +y_0=0 " \
-                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_108_hn = "+proj=tmerc +lat_0=0 +lon_0=108 +k=0.9999 +x_0=500000 +y_0=0 " \
-                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_108_25_hn = "+proj=tmerc +lat_0=0 +lon_0=108.25 +k=0.9999 +x_0=500000 +y_0=0 " \
-                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-        htd_108_5_hn = "+proj=tmerc +lat_0=0 +lon_0=108.5 +k=0.9999 +x_0=500000 +y_0=0 " \
-                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
-                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
-
-        # UTM 48, 49
-        htd_utm_48 = "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
-        htd_utm_49 = "+proj=utm +zone=49 +datum=WGS84 +units=m +no_defs"
-
-        # WGS84 Lat/Long - 4326
-        htd_latlong_4326 = "+proj=longlat +datum=WGS84 +no_defs"
-
         class LayerInfo:
             name = ""
             crs = ""
-
-        def find_crs(layer_object):
-            if layer_object.crs().toProj4() == htd_103_nb:
-                return "VN-2000 Noi bo KTT 103 mui 3"
-            elif layer_object.crs().toProj4() == htd_104_nb:
-                return "VN-2000 Noi bo KTT 104 mui 3"
-            elif layer_object.crs().toProj4() == htd_104_5_nb:
-                return "VN-2000 Noi bo KTT 104.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_104_75_nb:
-                return "VN-2000 Noi bo KTT 104.75 mui 3"
-            elif layer_object.crs().toProj4() == htd_105_nb:
-                return "VN-2000 Noi bo KTT 105 mui 3"
-            elif layer_object.crs().toProj4() == htd_105_5_nb:
-                return "VN-2000 Noi bo KTT 105.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_105_75_nb:
-                return "VN-2000 Noi bo KTT 105.75 mui 3"
-            elif layer_object.crs().toProj4() == htd_106_nb:
-                return "VN-2000 Noi bo KTT 106 mui 3"
-            elif layer_object.crs().toProj4() == htd_106_25_nb:
-                return "VN-2000 Noi bo KTT 106.25 mui 3"
-            elif layer_object.crs().toProj4() == htd_106_5_nb:
-                return "VN-2000 Noi bo KTT 106.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_nb:
-                return "VN-2000 Noi bo KTT 107 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_25_nb:
-                return "VN-2000 Noi bo KTT 107.25 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_5_nb:
-                return "VN-2000 Noi bo KTT 107.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_75_nb:
-                return "VN-2000 Noi bo KTT 107.75 mui 3"
-            elif layer_object.crs().toProj4() == htd_108_nb:
-                return "VN-2000 Noi bo KTT 108 mui 3"
-            elif layer_object.crs().toProj4() == htd_108_25_nb:
-                return "VN-2000 Noi bo KTT 108.25 mui 3"
-            elif layer_object.crs().toProj4() == htd_108_5_nb:
-                return "VN-2000 Noi bo KTT 108.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_103_hn:
-                return "VN-2000 Hoi nhap KTT 103 mui 3"
-            elif layer_object.crs().toProj4() == htd_104_hn:
-                return "VN-2000 Hoi nhap KTT 104 mui 3"
-            elif layer_object.crs().toProj4() == htd_104_5_hn:
-                return "VN-2000 Hoi nhap KTT 104.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_104_75_hn:
-                return "VN-2000 Hoi nhap KTT 104.75 mui 3"
-            elif layer_object.crs().toProj4() == htd_105_hn:
-                return "VN-2000 Hoi nhap KTT 105 mui 3"
-            elif layer_object.crs().toProj4() == htd_105_5_hn:
-                return "VN-2000 Hoi nhap KTT 105.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_105_75_hn:
-                return "VN-2000 Hoi nhap KTT 105.75 mui 3"
-            elif layer_object.crs().toProj4() == htd_106_hn:
-                return "VN-2000 Hoi nhap KTT 106 mui 3"
-            elif layer_object.crs().toProj4() == htd_106_25_hn:
-                return "VN-2000 Hoi nhap KTT 106.25 mui 3"
-            elif layer_object.crs().toProj4() == htd_106_5_hn:
-                return "VN-2000 Hoi nhap KTT 106.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_hn:
-                return "VN-2000 Hoi nhap KTT 107 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_25_hn:
-                return "VN-2000 Hoi nhap KTT 107.25 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_5_hn:
-                return "VN-2000 Hoi nhap KTT 107.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_107_75_hn:
-                return "VN-2000 Hoi nhap KTT 107.75 mui 3"
-            elif layer_object.crs().toProj4() == htd_108_hn:
-                return "VN-2000 Hoi nhap KTT 108 mui 3"
-            elif layer_object.crs().toProj4() == htd_108_25_hn:
-                return "VN-2000 Hoi nhap KTT 108.25 mui 3"
-            elif layer_object.crs().toProj4() == htd_108_5_hn:
-                return "VN-2000 Hoi nhap KTT 108.5 mui 3"
-            elif layer_object.crs().toProj4() == htd_utm_48:
-                return "UTM Zone 48N - EPSG:32648"
-            elif layer_object.crs().toProj4() == htd_utm_49:
-                return "UTM Zone 49N - EPSG:32649"
-            elif layer_object.crs().toProj4() == htd_latlong_4326:
-                return "WGS 84 Lat/Long - EPSG:4326"
 
         # Generate data table
         self.dlg1.tableWidget.clear()
@@ -400,10 +226,10 @@ class CRSTools:
 
             layer_list.append(LayerInfo)
             layer_list[layer_count - 1].name = layer.name()
-            layer_list[layer_count - 1].crs = find_crs(layer)
+            layer_list[layer_count - 1].crs = self.find_crs(layer)
 
             self.dlg1.tableWidget.setItem(layer_count - 1, 0, QTableWidgetItem(layer.name()))
-            self.dlg1.tableWidget.setItem(layer_count - 1, 1, QTableWidgetItem(find_crs(layer)))
+            self.dlg1.tableWidget.setItem(layer_count - 1, 1, QTableWidgetItem(self.find_crs(layer)))
 
         self.dlg1.tableWidget.move(0, 0)
 
@@ -449,6 +275,7 @@ class CRSTools:
     def convert(self):
         self.dlg.hide()
 
+        # Generate layer list
         layer_list = []
 
         for i in self.layers:
@@ -457,39 +284,136 @@ class CRSTools:
 
         self.dlg3.listWidget.clear()
         self.dlg3.listWidget.addItems(layer_list)
+        self.dlg3.input_layer.addItems(layer_list)
 
-        # Respond to clicked PushButton
-        def convert():
-            crs_in = self.dlg3.comboBox_in.currentText()
-            crs_out = self.dlg3.comboBox_out.currentText()
+        def convert_crs():
 
-            save_dir = QFileDialog.getExistingDirectory(self.dlg3, 'Chọn thư mục để lưu')
+            def convert():
+                crs_in = self.dlg3.comboBox_in.currentText()
+                crs_out = self.dlg3.comboBox_out.currentText()
 
-            def gen_output(out_type):
-                if out_type == '.shp':
-                    drv = 'ESRI Shapefile'
+                save_dir = QFileDialog.getExistingDirectory(self.dlg3, 'Chọn thư mục để lưu / '
+                                                                       'Choose folder to save converted CRS')
+
+                def gen_output(out_type):
+                    if out_type == '.shp':
+                        drv = 'ESRI Shapefile'
+                    else:
+                        drv = 'MapInfo File'
+
+                    for layer in self.layers:
+                        export_crs = self.crs_object(layer, crs_out)
+                        in_crs = self.crs_object(layer, crs_in)
+                        if not in_crs == 'System':
+                            layer.setCrs(in_crs)
+
+                        if not save_dir == '':
+                            QgsVectorFileWriter.writeAsVectorFormat(layer, '%s/%s%s' % (save_dir, layer.name(), out_type)
+                                                                    , 'UTF-8', self.crs_object(layer, export_crs), drv)
+
+                if self.dlg3.checkBox_esri.isChecked():
+                    gen_output('.shp')
+                if self.dlg3.checkBox_mi.isChecked():
+                    gen_output('.tab')
+
+                convert()
+
+        def convert_font():
+            filename = QFileDialog.getSaveFileName(self.dlg, u"Chọn thư mục và tên lớp đầu ra / "
+                                                             u"Choose output directory and output layer name",
+                                                   "", '*.shp')
+
+            def convert(string, s, d):
+                result = u''
+                for c in string:
+                    if c in s:
+                        idx = s.index(c)
+                        if idx >= 0:
+                            c = d[idx]
+                    result += c
+                return result
+
+            def encoding_table(encoding_name):
+                # Character encoding declaration
+                _Unicode = [
+                    u'â', u'Â', u'ă', u'Ă', u'đ', u'Đ', u'ê', u'Ê', u'ô', u'Ô', u'ơ', u'Ơ', u'ư', u'Ư', u'á', u'Á', u'à',
+                    u'À', u'ả', u'Ả', u'ã', u'Ã', u'ạ', u'Ạ',
+                    u'ấ', u'Ấ', u'ầ', u'Ầ', u'ẩ', u'Ẩ', u'ẫ', u'Ẫ', u'ậ', u'Ậ', u'ắ', u'Ắ', u'ằ', u'Ằ', u'ẳ', u'Ẳ', u'ẵ',
+                    u'Ẵ', u'ặ', u'Ặ',
+                    u'é', u'É', u'è', u'È', u'ẻ', u'Ẻ', u'ẽ', u'Ẽ', u'ẹ', u'Ẹ', u'ế', u'Ế', u'ề', u'Ề', u'ể', u'Ể', u'ễ',
+                    u'Ễ', u'ệ', u'Ệ', u'í', u'Í', u'ì', u'Ì', u'ỉ', u'Ỉ', u'ĩ', u'Ĩ', u'ị', u'Ị',
+                    u'ó', u'Ó', u'ò', u'Ò', u'ỏ', u'Ỏ', u'õ', u'Õ', u'ọ', u'Ọ', u'ố', u'Ố', u'ồ', u'Ồ', u'ổ', u'Ổ', u'ỗ',
+                    u'Ỗ', u'ộ', u'Ộ', u'ớ', u'Ớ', u'ờ', u'Ờ', u'ở', u'Ở', u'ỡ', u'Ỡ', u'ợ', u'Ợ',
+                    u'ú', u'Ú', u'ù', u'Ù', u'ủ', u'Ủ', u'ũ', u'Ũ', u'ụ', u'Ụ', u'ứ', u'Ứ', u'ừ', u'Ừ', u'ử', u'Ử', u'ữ',
+                    u'Ữ', u'ự', u'Ự', u'ỳ', u'Ỳ', u'ỷ', u'Ỷ', u'ỹ', u'Ỹ', u'ỵ', u'Ỵ', u'ý', u'Ý'
+                ]
+                _TCVN3 = [
+                    u'©', u'¢', u'¨', u'¡', u'®', u'§', u'ª', u'£', u'«', u'¤', u'¬', u'¥', u'­', u'¦', u'¸', u'¸', u'µ',
+                    u'µ', u'¶', u'¶', u'·', u'·', u'¹', u'¹',
+                    u'Ê', u'Ê', u'Ç', u'Ç', u'È', u'È', u'É', u'É', u'Ë', u'Ë', u'¾', u'¾', u'»', u'»', u'¼', u'¼', u'½',
+                    u'½', u'Æ', u'Æ',
+                    u'Ð', u'Ð', u'Ì', u'Ì', u'Î', u'Î', u'Ï', u'Ï', u'Ñ', u'Ñ', u'Õ', u'Õ', u'Ò', u'Ò', u'Ó', u'Ó', u'Ô',
+                    u'Ô', u'Ö', u'Ö', u'Ý', u'Ý', u'×', u'×', u'Ø', u'Ø', u'Ü', u'Ü', u'Þ', u'Þ',
+                    u'ã', u'ã', u'ß', u'ß', u'á', u'á', u'â', u'â', u'ä', u'ä', u'è', u'è', u'å', u'å', u'æ', u'æ', u'ç',
+                    u'ç', u'é', u'é', u'í', u'í', u'ê', u'ê', u'ë', u'ë', u'ì', u'ì', u'î', u'î',
+                    u'ó', u'ó', u'ï', u'ï', u'ñ', u'ñ', u'ò', u'ò', u'ô', u'ô', u'ø', u'ø', u'õ', u'õ', u'ö', u'ö', u'÷',
+                    u'÷', u'ù', u'ù', u'ú', u'ú', u'û', u'û', u'ü', u'ü', u'þ', u'þ', u'ý', u'ý'
+                ]
+                _KhongDau = [
+                    u'a', u'A', u'a', u'A', u'd', u'D', u'e', u'E', u'o', u'O', u'o', u'O', u'u', u'U', u'a', u'A', u'a',
+                    u'A', u'a', u'A', u'a', u'A', u'a', u'A',
+                    u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a',
+                    u'A', u'a', u'A',
+                    u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', 'uE', u'e', u'E', u'e',
+                    u'E', u'e', u'E', u'i', u'I', u'i', u'I', u'i', u'I', u'i', u'I', u'i', u'I',
+                    u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o',
+                    u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O',
+                    u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u',
+                    u'U', u'u', u'U', u'y', u'Y', u'y', u'Y', u'y', u'Y', u'y', u'Y', u'y', u'Y'
+                ]
+
+                if encoding_name == "TCVN (ABC)":
+                    return _TCVN3
+                elif encoding_name == "Unicode":
+                    return _Unicode
                 else:
-                    drv = 'MapInfo File'
+                    return _KhongDau
 
-                for layer in self.layers:
-                    export_crs = self.crs_object(layer, crs_out)
-                    in_crs = self.crs_object(layer, crs_in)
-                    if not in_crs == 'System':
-                        layer.setCrs(in_crs)
+            selected_layer = self.layers[self.dlg3.input_layer.currentIndex()]
+            font_in = self.dlg3.comboBox_font_in.currentText()
+            font_out = self.dlg3.comboBox_font_out.currentText()
 
-                    if not save_dir == '':
-                        QgsVectorFileWriter.writeAsVectorFormat(layer, '%s/%s%s' % (save_dir, layer.name(), out_type)
-                                                                , 'UTF-8', self.crs_object(layer, export_crs), drv)
+            shape_writer = QgsVectorFileWriter(filename, "UTF-8", selected_layer.dataProvider().fields()
+                                               , selected_layer.dataProvider().geometryType(), selected_layer.crs())
 
-            if self.dlg3.checkBox_esri.isChecked():
-                gen_output('.shp')
-            if self.dlg3.checkBox_mi.isChecked():
-                gen_output('.tab')
+            features = selected_layer.getFeatures()
 
-        self.dlg3.pushButton.clicked.connect(convert)
+            textfield = []
+            for field in selected_layer.dataProvider().fields():
+                if field.type() in [QVariant.String]:
+                    textfield.append(field.name())
+
+            for feat in features:
+                for ab in textfield:
+                    abc = feat[ab]
+                    if abc != '' and not font_in == font_out:
+                            feat[ab] = convert(abc, encoding_table(font_in), encoding_table(font_out))
+                shape_writer.addFeature(feat)
+
+            layer = QgsVectorLayer(filename, QFileInfo(filename).baseName(), 'ogr')
+            layer.setProviderEncoding(u'System')
+            layer.dataProvider().setEncoding(u'UTF-8')
+
+        def execute():
+            if self.dlg3.checkBox_crs.isChecked():
+                convert_crs()
+            if self.dlg3.checkBox_font.isChecked():
+                convert_font()
 
         self.dlg3.show()
         self.dlg3.exec()
+
+        self.dlg3.buttonBox.accepted.connect(execute)
 
         self.dlg.show()
 
@@ -622,3 +546,178 @@ class CRSTools:
             return crs_custom_108_25
         elif crs_string == "VN-2000 mui 3 KTT 108.5" or crs_string == "VN-2000 Hoi nhap mui 3 KTT 108.5":
             return crs_custom_108_5
+
+    @staticmethod
+    def find_crs(layer_object):
+        # Declaration of coordinate systems - Taken from checkcoordinatesystem plugin
+
+        # VN2000 Noi bo mui 3
+        htd_103_nb = "+proj=tmerc +lat_0=0 +lon_0=103 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_104_nb = "+proj=tmerc +lat_0=0 +lon_0=104 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_104_5_nb = "+proj=tmerc +lat_0=0 +lon_0=104.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_104_75_nb = "+proj=tmerc +lat_0=0 +lon_0=104.75 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_105_nb = "+proj=tmerc +lat_0=0 +lon_0=105 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_105_5_nb = "+proj=tmerc +lat_0=0 +lon_0=105.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_105_75_nb = "+proj=tmerc +lat_0=0 +lon_0=105.75 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_106_nb = "+proj=tmerc +lat_0=0 +lon_0=106 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_106_25_nb = "+proj=tmerc +lat_0=0 +lon_0=106.25 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_106_5_nb = "+proj=tmerc +lat_0=0 +lon_0=106.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_107_nb = "+proj=tmerc +lat_0=0 +lon_0=107 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_107_25_nb = "+proj=tmerc +lat_0=0 +lon_0=107.25 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_107_5_nb = "+proj=tmerc +lat_0=0 +lon_0=107.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_107_75_nb = "+proj=tmerc +lat_0=0 +lon_0=107.75 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_108_nb = "+proj=tmerc +lat_0=0 +lon_0=108 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_108_25_nb = "+proj=tmerc +lat_0=0 +lon_0=108.25 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                        "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+        htd_108_5_nb = "+proj=tmerc +lat_0=0 +lon_0=108.5 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                       "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+
+        # VN2000 Hoi nhap mui 3
+        htd_103_hn = "+proj=tmerc +lat_0=0 +lon_0=103 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=-191.90441429,-39.30318279,-111.45032835,0.00928836," \
+                     "-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_104_hn = "+proj=tmerc +lat_0=0 +lon_0=104 +k=0.9999 +x_0=500000 +y_0=0 " \
+                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_104_5_hn = "+proj=tmerc +lat_0=0 +lon_0=104_5 +k=0.9999 +x_0=500000 +y_0=0 " \
+                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_104_75_hn = "+proj=tmerc +lat_0=0 +lon_0=104.75 +k=0.9999 +x_0=500000 +y_0=0 " \
+                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_105_hn = "+proj=tmerc +lat_0=0 +lon_0=105 +k=0.9999 +x_0=500000 +y_0=0 +ellps=WGS84 " \
+                     "+towgs84=-191.90441429,-39.30318279,-111.45032835,0.00928836," \
+                     "-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_105_5_hn = "+proj=tmerc +lat_0=0 +lon_0=105.5 +k=0.9999 +x_0=500000 +y_0=0 " \
+                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_105_75_hn = "+proj=tmerc +lat_0=0 +lon_0=105.75 +k=0.9999 +x_0=500000 +y_0=0 " \
+                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_106_hn = "+proj=tmerc +lat_0=0 +lon_0=106 +k=0.9999 +x_0=500000 +y_0=0 " \
+                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_106_25_hn = "+proj=tmerc +lat_0=0 +lon_0=106.25 +k=0.9999 +x_0=500000 +y_0=0 " \
+                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_106_5_hn = "+proj=tmerc +lat_0=0 +lon_0=106.5 +k=0.9999 +x_0=500000 +y_0=0 " \
+                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_107_hn = "+proj=tmerc +lat_0=0 +lon_0=107 +k=0.9999 +x_0=500000 +y_0=0 " \
+                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_107_25_hn = "+proj=tmerc +lat_0=0 +lon_0=107.25 +k=0.9999 +x_0=500000 +y_0=0 " \
+                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_107_5_hn = "+proj=tmerc +lat_0=0 +lon_0=107.5 +k=0.9999 +x_0=500000 +y_0=0 " \
+                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_107_75_hn = "+proj=tmerc +lat_0=0 +lon_0=107.75 +k=0.9999 +x_0=500000 +y_0=0 " \
+                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_108_hn = "+proj=tmerc +lat_0=0 +lon_0=108 +k=0.9999 +x_0=500000 +y_0=0 " \
+                     "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                     "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_108_25_hn = "+proj=tmerc +lat_0=0 +lon_0=108.25 +k=0.9999 +x_0=500000 +y_0=0 " \
+                        "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                        "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+        htd_108_5_hn = "+proj=tmerc +lat_0=0 +lon_0=108.5 +k=0.9999 +x_0=500000 +y_0=0 " \
+                       "+ellps=WGS84 +towgs84=-191.90441429,-39.30318279,-111.45032835," \
+                       "0.00928836,-0.01975479,0.00427372,0.252906278 +units=m +no_defs"
+
+        # UTM 48, 49
+        htd_utm_48 = "+proj=utm +zone=48 +datum=WGS84 +units=m +no_defs"
+        htd_utm_49 = "+proj=utm +zone=49 +datum=WGS84 +units=m +no_defs"
+
+        # WGS84 Lat/Long - 4326
+        htd_latlong_4326 = "+proj=longlat +datum=WGS84 +no_defs"
+
+        if layer_object.crs().toProj4() == htd_103_nb:
+            return "VN-2000 Noi bo KTT 103 mui 3"
+        elif layer_object.crs().toProj4() == htd_104_nb:
+            return "VN-2000 Noi bo KTT 104 mui 3"
+        elif layer_object.crs().toProj4() == htd_104_5_nb:
+            return "VN-2000 Noi bo KTT 104.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_104_75_nb:
+            return "VN-2000 Noi bo KTT 104.75 mui 3"
+        elif layer_object.crs().toProj4() == htd_105_nb:
+            return "VN-2000 Noi bo KTT 105 mui 3"
+        elif layer_object.crs().toProj4() == htd_105_5_nb:
+            return "VN-2000 Noi bo KTT 105.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_105_75_nb:
+            return "VN-2000 Noi bo KTT 105.75 mui 3"
+        elif layer_object.crs().toProj4() == htd_106_nb:
+            return "VN-2000 Noi bo KTT 106 mui 3"
+        elif layer_object.crs().toProj4() == htd_106_25_nb:
+            return "VN-2000 Noi bo KTT 106.25 mui 3"
+        elif layer_object.crs().toProj4() == htd_106_5_nb:
+            return "VN-2000 Noi bo KTT 106.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_nb:
+            return "VN-2000 Noi bo KTT 107 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_25_nb:
+            return "VN-2000 Noi bo KTT 107.25 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_5_nb:
+            return "VN-2000 Noi bo KTT 107.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_75_nb:
+            return "VN-2000 Noi bo KTT 107.75 mui 3"
+        elif layer_object.crs().toProj4() == htd_108_nb:
+            return "VN-2000 Noi bo KTT 108 mui 3"
+        elif layer_object.crs().toProj4() == htd_108_25_nb:
+            return "VN-2000 Noi bo KTT 108.25 mui 3"
+        elif layer_object.crs().toProj4() == htd_108_5_nb:
+            return "VN-2000 Noi bo KTT 108.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_103_hn:
+            return "VN-2000 Hoi nhap KTT 103 mui 3"
+        elif layer_object.crs().toProj4() == htd_104_hn:
+            return "VN-2000 Hoi nhap KTT 104 mui 3"
+        elif layer_object.crs().toProj4() == htd_104_5_hn:
+            return "VN-2000 Hoi nhap KTT 104.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_104_75_hn:
+            return "VN-2000 Hoi nhap KTT 104.75 mui 3"
+        elif layer_object.crs().toProj4() == htd_105_hn:
+            return "VN-2000 Hoi nhap KTT 105 mui 3"
+        elif layer_object.crs().toProj4() == htd_105_5_hn:
+            return "VN-2000 Hoi nhap KTT 105.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_105_75_hn:
+            return "VN-2000 Hoi nhap KTT 105.75 mui 3"
+        elif layer_object.crs().toProj4() == htd_106_hn:
+            return "VN-2000 Hoi nhap KTT 106 mui 3"
+        elif layer_object.crs().toProj4() == htd_106_25_hn:
+            return "VN-2000 Hoi nhap KTT 106.25 mui 3"
+        elif layer_object.crs().toProj4() == htd_106_5_hn:
+            return "VN-2000 Hoi nhap KTT 106.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_hn:
+            return "VN-2000 Hoi nhap KTT 107 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_25_hn:
+            return "VN-2000 Hoi nhap KTT 107.25 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_5_hn:
+            return "VN-2000 Hoi nhap KTT 107.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_107_75_hn:
+            return "VN-2000 Hoi nhap KTT 107.75 mui 3"
+        elif layer_object.crs().toProj4() == htd_108_hn:
+            return "VN-2000 Hoi nhap KTT 108 mui 3"
+        elif layer_object.crs().toProj4() == htd_108_25_hn:
+            return "VN-2000 Hoi nhap KTT 108.25 mui 3"
+        elif layer_object.crs().toProj4() == htd_108_5_hn:
+            return "VN-2000 Hoi nhap KTT 108.5 mui 3"
+        elif layer_object.crs().toProj4() == htd_utm_48:
+            return "UTM Zone 48N - EPSG:32648"
+        elif layer_object.crs().toProj4() == htd_utm_49:
+            return "UTM Zone 49N - EPSG:32649"
+        elif layer_object.crs().toProj4() == htd_latlong_4326:
+            return "WGS 84 Lat/Long - EPSG:4326"

@@ -11,13 +11,13 @@ name=CRS Tools
 qgisMinimumVersion=3.0
 description=Check, define and convert CRS
 version=0.1
-author=Hieu Van
+author=Hieu Van - GFD
 email=hieuvan@disroot.org
 
 about=Provide a brief description of the plugin and its purpose.
 
-tracker=http://bugs
-repository=http://repo
+tracker=https://github.com/gfd-gis/crstools/issues
+repository=https://github.com/gfd-gis/crstools
 # End of mandatory metadata
 
 # Recommended items:
@@ -26,9 +26,9 @@ repository=http://repo
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=python
+tags=python,gfd,vn2000,check,define,convert,crs
 
-homepage=http://homepage
+homepage=https://github.com/gfd-gis/crstools
 category=Plugins
 icon=icon.png
 # experimental flag

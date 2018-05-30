@@ -6,28 +6,41 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>444</width>
-    <height>467</height>
+    <width>457</width>
+    <height>581</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Chuyển hệ toạ độ và lưu file mới - GFD</string>
+   <string notr="true">Chuyển đổi HTĐ/mã font tiếng Việt</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QListWidget" name="listWidget"/>
-     </item>
-     <item row="1" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
-        <string>Hệ toạ độ các lớp đầu vào:</string>
+        <string>Hệ toạ độ các lớp đầu vào / CRS of input layers:</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Hệ toạ độ các file đầu ra / CRS of output layers:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
       <widget class="QComboBox" name="comboBox_in">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <item>
         <property name="text">
          <string>System</string>
@@ -125,15 +138,67 @@
        </item>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="text">
-        <string>Hệ toạ độ các file đầu ra:</string>
+        <string>Chọn lớp vector đầu vào / Select input vector layer:</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="8" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QCheckBox" name="checkBox_esri">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>ESRI shapefile</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBox_mi">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>MapInfo</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Định dạng file đầu ra / Output file format:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
       <widget class="QComboBox" name="comboBox_out">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <item>
         <property name="text">
          <string>System</string>
@@ -246,50 +311,147 @@
        </item>
       </widget>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="16" column="0">
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QComboBox" name="input_layer">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Hãy chọn lớp vector (các định dạng OGR)...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="checkBox_crs">
+       <property name="text">
+        <string>Chuyển HTĐ / Convert CRS</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="Line" name="line">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="text">
-        <string>Định dạng file đầu ra:</string>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>5</height>
+        </size>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Sunken</enum>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout">
+     <item row="1" column="0" rowspan="2">
+      <widget class="QListWidget" name="listWidget">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QCheckBox" name="checkBox_esri">
+        <widget class="QComboBox" name="comboBox_font_in">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>TCVN (ABC)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Unicode</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
-          <string>ESRI shapefile</string>
+          <string>-&gt;</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_mi">
-         <property name="text">
-          <string>MapInfo</string>
+        <widget class="QComboBox" name="comboBox_font_out">
+         <property name="enabled">
+          <bool>false</bool>
          </property>
+         <item>
+          <property name="text">
+           <string>TCVN (ABC)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Unicode</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Không dấu</string>
+          </property>
+         </item>
         </widget>
        </item>
       </layout>
      </item>
-     <item row="7" column="0">
-      <widget class="QPushButton" name="pushButton">
+     <item row="10" column="0">
+      <widget class="QCheckBox" name="checkBox_font">
        <property name="text">
-        <string>Chuyển và lưu</string>
+        <string>Chuyển mã font tiếng Việt / Convert Vietnamese character encoding</string>
        </property>
-       <property name="checkable">
+      </widget>
+     </item>
+     <item row="14" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="enabled">
         <bool>false</bool>
        </property>
-       <property name="autoDefault">
-        <bool>false</bool>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
        </property>
-       <property name="flat">
-        <bool>false</bool>
+       <property name="text">
+        <string>Chọn kiểu chuyển đổi / Select original and desired encoding:</string>
        </property>
       </widget>
      </item>
@@ -298,5 +460,214 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>227</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>225</x>
+     <y>204</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>listWidget</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>103</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>104</x>
+     <y>53</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>comboBox_in</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>297</x>
+     <y>15</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>352</x>
+     <y>230</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>261</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>comboBox_out</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>172</x>
+     <y>21</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>161</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_4</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>58</x>
+     <y>329</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>checkBox_esri</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>18</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>31</x>
+     <y>350</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_crs</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>checkBox_mi</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>411</x>
+     <y>20</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_font</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>110</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>110</x>
+     <y>421</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_font</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>input_layer</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>236</x>
+     <y>392</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>233</x>
+     <y>439</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_font</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_5</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>307</x>
+     <y>396</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>310</x>
+     <y>493</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_font</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>comboBox_font_out</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>338</x>
+     <y>390</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>338</x>
+     <y>511</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBox_font</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>comboBox_font_in</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>131</x>
+     <y>391</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>133</x>
+     <y>518</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

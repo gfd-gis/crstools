@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>497</width>
+    <width>566</width>
     <height>128</height>
    </rect>
   </property>
@@ -25,7 +25,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Kiểm tra hệ toạ độ các lớp</string>
+        <string>Kiểm tra hệ toạ độ các lớp / Check CRS of layers</string>
        </property>
       </widget>
      </item>
@@ -38,7 +38,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Thiết lập HTĐ để dùng với Google Earth</string>
+        <string>Thiết lập HTĐ để dùng với Google Earth / Define CRS to use with GE</string>
        </property>
       </widget>
      </item>
@@ -51,7 +51,13 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Chuyển đổi HTĐ các lớp và xuất ra</string>
+        <string>Chuyển đổi HTĐ/mã font tiếng Việt / Convert CRS/VNese character encoding</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoRepeat">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
