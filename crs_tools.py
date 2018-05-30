@@ -21,7 +21,7 @@
  *                                                                         *
  ***************************************************************************/
 """
-from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QVariant, QFileInfo
+from PyQt5.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo, QFile
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction, QFileDialog, QTableWidgetItem
 from qgis.core import QgsProject, QgsVectorFileWriter, QgsVectorLayer
@@ -79,9 +79,6 @@ class CRSTools:
         # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'CRSTools')
         self.toolbar.setObjectName(u'CRSTools')
-
-        # Create layer list
-        self.layers = QgsProject.instance().mapLayers().values()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -201,7 +198,8 @@ class CRSTools:
         self.dlg.pushButton_3.clicked.connect(self.convert)
 
     def check(self):
-        self.dlg.hide()
+        # Create layer list
+        layers = QgsProject.instance().mapLayers().values()
 
         class LayerInfo:
             name = ""
@@ -209,7 +207,7 @@ class CRSTools:
 
         # Generate data table
         self.dlg1.tableWidget.clear()
-        self.dlg1.tableWidget.setRowCount(len(self.layers))
+        self.dlg1.tableWidget.setRowCount(len(layers))
         self.dlg1.tableWidget.setColumnCount(2)
         self.dlg1.tableWidget.setColumnWidth(0, 300)
         self.dlg1.tableWidget.horizontalHeader().setStretchLastSection(True)
@@ -221,7 +219,7 @@ class CRSTools:
         layer_list = []
         layer_count = 0
 
-        for layer in self.layers:
+        for layer in layers:
             layer_count += 1
 
             layer_list.append(LayerInfo)
@@ -234,7 +232,8 @@ class CRSTools:
         self.dlg1.tableWidget.move(0, 0)
 
         def save_to_file():
-            name = QFileDialog().getSaveFileName(self.dlg1, "Export result to CSV", "", "CSV file (*.csv)")
+            dialog = QFileDialog()
+            name = dialog.getSaveFileName(None, "Export result to CSV", "", "CSV file (*.csv)")
             if name[0] == "":
                 return None
 
@@ -246,163 +245,113 @@ class CRSTools:
             save_file.close()
 
         self.dlg1.show()
-        self.dlg1.exec()
-
         self.dlg1.pushButton.clicked.connect(save_to_file)
 
-        self.dlg.show()
-
     def define(self):
-        self.dlg.hide()
-
+        # Create layer list
+        layers = QgsProject.instance().mapLayers().values()
+        
         layer_list = []
-        for layer in self.layers:
+        for layer in layers:
             if layer.type() == 0:
                 layer_list.append(layer.name())
 
         self.dlg2.listWidget.clear()
         self.dlg2.listWidget.addItems(layer_list)
 
-        htd = self.dlg2.comboBox.currentText()
-        for f in self.layers:
-            if f.type() == 0 and self.crs_object(f, htd) != 'System':
-                f.setCrs(self.crs_object(f, htd))
+        def run():
+            htd = self.dlg2.comboBox.currentText()
+            for f in layers:
+                if f.type() == 0 and self.crs_object(f, htd) != 'System':
+                    f.setCrs(self.crs_object(f, htd))
 
         self.dlg2.show()
-        self.dlg2.exec()
-        self.dlg.show()
+        self.dlg2.button_box.accepted.connect(run)
 
     def convert(self):
-        self.dlg.hide()
+        # Create layer list
+        layers = QgsProject.instance().mapLayers().values()
 
         # Generate layer list
         layer_list = []
 
-        for i in self.layers:
+        for i in layers:
             if i.type() == 0:
                 layer_list.append(i.name())
 
         self.dlg3.listWidget.clear()
         self.dlg3.listWidget.addItems(layer_list)
+        self.dlg3.input_layer.clear()
         self.dlg3.input_layer.addItems(layer_list)
 
         def convert_crs():
+            crs_in = self.dlg3.comboBox_in.currentText()
+            crs_out = self.dlg3.comboBox_out.currentText()
 
-            def convert():
-                crs_in = self.dlg3.comboBox_in.currentText()
-                crs_out = self.dlg3.comboBox_out.currentText()
+            save_dialog = QFileDialog()
+            save_dir = save_dialog.getExistingDirectory(None, 'Chọn thư mục để lưu / '
+                                                              'Choose folder to save converted CRS')
+            if save_dir != '':
+                return
 
-                save_dir = QFileDialog.getExistingDirectory(self.dlg3, 'Chọn thư mục để lưu / '
-                                                                       'Choose folder to save converted CRS')
+            def gen_output(out_type):
+                if out_type == '.shp':
+                    drv = 'ESRI Shapefile'
+                else:
+                    drv = 'MapInfo File'
 
-                def gen_output(out_type):
-                    if out_type == '.shp':
-                        drv = 'ESRI Shapefile'
-                    else:
-                        drv = 'MapInfo File'
+                for layer in layers:
+                    if not crs_in == 'System':
+                        layer.setCrs(self.crs_object(layer, crs_in))
 
-                    for layer in self.layers:
-                        export_crs = self.crs_object(layer, crs_out)
-                        in_crs = self.crs_object(layer, crs_in)
-                        if not in_crs == 'System':
-                            layer.setCrs(in_crs)
+                    export_crs = self.crs_object(layer, crs_out)
+                    QgsVectorFileWriter.writeAsVectorFormat(layer, '%s/%s%s' % (save_dir, layer.name(), out_type)
+                                                            , 'UTF-8', export_crs, drv)
 
-                        if not save_dir == '':
-                            QgsVectorFileWriter.writeAsVectorFormat(layer, '%s/%s%s' % (save_dir, layer.name(), out_type)
-                                                                    , 'UTF-8', self.crs_object(layer, export_crs), drv)
-
-                if self.dlg3.checkBox_esri.isChecked():
-                    gen_output('.shp')
-                if self.dlg3.checkBox_mi.isChecked():
-                    gen_output('.tab')
-
-                convert()
+            if self.dlg3.checkBox_esri.isChecked():
+                gen_output('.shp')
+            if self.dlg3.checkBox_mi.isChecked():
+                gen_output('.tab')
 
         def convert_font():
-            filename = QFileDialog.getSaveFileName(self.dlg, u"Chọn thư mục và tên lớp đầu ra / "
-                                                             u"Choose output directory and output layer name",
-                                                   "", '*.shp')
+            dialog = QFileDialog()
+            filename = dialog.getSaveFileName(None, "Chọn thư mục và tên lớp đầu ra / "
+                                                    "Choose output directory and output layer name", "",
+                                              "Shapefile (*.shp)")
+            if filename[0] == '':
+                return None
 
-            def convert(string, s, d):
-                result = u''
-                for c in string:
-                    if c in s:
-                        idx = s.index(c)
-                        if idx >= 0:
-                            c = d[idx]
-                    result += c
-                return result
+            selected_layer_name = self.dlg3.input_layer.currentText()
+            # Classic search :)
+            selected_layer = None
+            for layer in layers:
+                if layer.name() == selected_layer_name:
+                    selected_layer = layer
+                    break
 
-            def encoding_table(encoding_name):
-                # Character encoding declaration
-                _Unicode = [
-                    u'â', u'Â', u'ă', u'Ă', u'đ', u'Đ', u'ê', u'Ê', u'ô', u'Ô', u'ơ', u'Ơ', u'ư', u'Ư', u'á', u'Á', u'à',
-                    u'À', u'ả', u'Ả', u'ã', u'Ã', u'ạ', u'Ạ',
-                    u'ấ', u'Ấ', u'ầ', u'Ầ', u'ẩ', u'Ẩ', u'ẫ', u'Ẫ', u'ậ', u'Ậ', u'ắ', u'Ắ', u'ằ', u'Ằ', u'ẳ', u'Ẳ', u'ẵ',
-                    u'Ẵ', u'ặ', u'Ặ',
-                    u'é', u'É', u'è', u'È', u'ẻ', u'Ẻ', u'ẽ', u'Ẽ', u'ẹ', u'Ẹ', u'ế', u'Ế', u'ề', u'Ề', u'ể', u'Ể', u'ễ',
-                    u'Ễ', u'ệ', u'Ệ', u'í', u'Í', u'ì', u'Ì', u'ỉ', u'Ỉ', u'ĩ', u'Ĩ', u'ị', u'Ị',
-                    u'ó', u'Ó', u'ò', u'Ò', u'ỏ', u'Ỏ', u'õ', u'Õ', u'ọ', u'Ọ', u'ố', u'Ố', u'ồ', u'Ồ', u'ổ', u'Ổ', u'ỗ',
-                    u'Ỗ', u'ộ', u'Ộ', u'ớ', u'Ớ', u'ờ', u'Ờ', u'ở', u'Ở', u'ỡ', u'Ỡ', u'ợ', u'Ợ',
-                    u'ú', u'Ú', u'ù', u'Ù', u'ủ', u'Ủ', u'ũ', u'Ũ', u'ụ', u'Ụ', u'ứ', u'Ứ', u'ừ', u'Ừ', u'ử', u'Ử', u'ữ',
-                    u'Ữ', u'ự', u'Ự', u'ỳ', u'Ỳ', u'ỷ', u'Ỷ', u'ỹ', u'Ỹ', u'ỵ', u'Ỵ', u'ý', u'Ý'
-                ]
-                _TCVN3 = [
-                    u'©', u'¢', u'¨', u'¡', u'®', u'§', u'ª', u'£', u'«', u'¤', u'¬', u'¥', u'­', u'¦', u'¸', u'¸', u'µ',
-                    u'µ', u'¶', u'¶', u'·', u'·', u'¹', u'¹',
-                    u'Ê', u'Ê', u'Ç', u'Ç', u'È', u'È', u'É', u'É', u'Ë', u'Ë', u'¾', u'¾', u'»', u'»', u'¼', u'¼', u'½',
-                    u'½', u'Æ', u'Æ',
-                    u'Ð', u'Ð', u'Ì', u'Ì', u'Î', u'Î', u'Ï', u'Ï', u'Ñ', u'Ñ', u'Õ', u'Õ', u'Ò', u'Ò', u'Ó', u'Ó', u'Ô',
-                    u'Ô', u'Ö', u'Ö', u'Ý', u'Ý', u'×', u'×', u'Ø', u'Ø', u'Ü', u'Ü', u'Þ', u'Þ',
-                    u'ã', u'ã', u'ß', u'ß', u'á', u'á', u'â', u'â', u'ä', u'ä', u'è', u'è', u'å', u'å', u'æ', u'æ', u'ç',
-                    u'ç', u'é', u'é', u'í', u'í', u'ê', u'ê', u'ë', u'ë', u'ì', u'ì', u'î', u'î',
-                    u'ó', u'ó', u'ï', u'ï', u'ñ', u'ñ', u'ò', u'ò', u'ô', u'ô', u'ø', u'ø', u'õ', u'õ', u'ö', u'ö', u'÷',
-                    u'÷', u'ù', u'ù', u'ú', u'ú', u'û', u'û', u'ü', u'ü', u'þ', u'þ', u'ý', u'ý'
-                ]
-                _KhongDau = [
-                    u'a', u'A', u'a', u'A', u'd', u'D', u'e', u'E', u'o', u'O', u'o', u'O', u'u', u'U', u'a', u'A', u'a',
-                    u'A', u'a', u'A', u'a', u'A', u'a', u'A',
-                    u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a',
-                    u'A', u'a', u'A',
-                    u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', 'uE', u'e', u'E', u'e',
-                    u'E', u'e', u'E', u'i', u'I', u'i', u'I', u'i', u'I', u'i', u'I', u'i', u'I',
-                    u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o',
-                    u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O',
-                    u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u',
-                    u'U', u'u', u'U', u'y', u'Y', u'y', u'Y', u'y', u'Y', u'y', u'Y', u'y', u'Y'
-                ]
-
-                if encoding_name == "TCVN (ABC)":
-                    return _TCVN3
-                elif encoding_name == "Unicode":
-                    return _Unicode
-                else:
-                    return _KhongDau
-
-            selected_layer = self.layers[self.dlg3.input_layer.currentIndex()]
             font_in = self.dlg3.comboBox_font_in.currentText()
             font_out = self.dlg3.comboBox_font_out.currentText()
 
-            shape_writer = QgsVectorFileWriter(filename, "UTF-8", selected_layer.dataProvider().fields()
-                                               , selected_layer.dataProvider().geometryType(), selected_layer.crs())
+            shape_writer = QgsVectorFileWriter(filename[0], "UTF-8", selected_layer.dataProvider().fields()
+                                               , selected_layer.dataProvider().wkbType(), selected_layer.crs())
 
             features = selected_layer.getFeatures()
 
             textfield = []
             for field in selected_layer.dataProvider().fields():
-                if field.type() in [QVariant.String]:
+                if field.type() == 'QString':
                     textfield.append(field.name())
 
-            for feat in features:
-                for ab in textfield:
-                    abc = feat[ab]
-                    if abc != '' and not font_in == font_out:
-                            feat[ab] = convert(abc, encoding_table(font_in), encoding_table(font_out))
-                shape_writer.addFeature(feat)
+            for f in features:
+                for ch in textfield:
+                    txt = f[ch]
+                    if txt != '' and not font_in == font_out:
+                            f[ch] = self.convert_ch(txt, self.encoding_table(font_in), self.encoding_table(font_out))
+                shape_writer.addFeature(f)
 
-            layer = QgsVectorLayer(filename, QFileInfo(filename).baseName(), 'ogr')
+            layer = QgsVectorLayer(filename[0], QFileInfo(QFile(filename[0])).baseName(), 'ogr')
             layer.setProviderEncoding(u'System')
-            layer.dataProvider().setEncoding(u'UTF-8')
+            # layer.dataProvider().setEncoding('UTF-8')
 
         def execute():
             if self.dlg3.checkBox_crs.isChecked():
@@ -411,11 +360,7 @@ class CRSTools:
                 convert_font()
 
         self.dlg3.show()
-        self.dlg3.exec()
-
         self.dlg3.buttonBox.accepted.connect(execute)
-
-        self.dlg.show()
 
     @staticmethod
     def crs_object(layer, crs_string):
@@ -502,13 +447,13 @@ class CRSTools:
         crs_custom_108_25 = Hoh().fromProj4(htd_108_25_hn)
         crs_custom_108_5 = Hoh().fromProj4(htd_108_5_hn)
 
-        if crs_string == "UTM Zone 48N - EPGS:32648":
+        if crs_string == "UTM Zone 48N - EPSG:32648":
             return Hoh().fromProj4(htd_utm_48)
         elif crs_string == 'System':
             return layer.crs()
-        elif crs_string == "UTM Zone 49N - EPGS:32649":
+        elif crs_string == "UTM Zone 49N - EPSG:32649":
             return Hoh().fromProj4(htd_utm_49)
-        elif crs_string == "WGS 84 Lat/long - EPGS:4326":
+        elif crs_string == "WGS 84 Lat/long - EPSG:4326":
             return Hoh().fromProj4(htd_4326)
         elif crs_string == "VN-2000 mui 3 KTT 102" or crs_string == "VN-2000 Hoi nhap mui 3 KTT 102":
             return crs_custom_102
@@ -546,6 +491,8 @@ class CRSTools:
             return crs_custom_108_25
         elif crs_string == "VN-2000 mui 3 KTT 108.5" or crs_string == "VN-2000 Hoi nhap mui 3 KTT 108.5":
             return crs_custom_108_5
+        else:
+            raise Exception("CRS corresponding with passed name is unknown")
 
     @staticmethod
     def find_crs(layer_object):
@@ -721,3 +668,63 @@ class CRSTools:
             return "UTM Zone 49N - EPSG:32649"
         elif layer_object.crs().toProj4() == htd_latlong_4326:
             return "WGS 84 Lat/Long - EPSG:4326"
+        else:
+            return "Unknown"
+
+    @staticmethod
+    def convert_ch(string, s, d):
+        result = u''
+        for c in string:
+            if c in s:
+                idx = s.index(c)
+                if idx >= 0:
+                    c = d[idx]
+            result += c
+        return result
+
+    @staticmethod
+    def encoding_table(encoding_name):
+        # Character encoding declaration
+        _Unicode = [
+            u'â', u'Â', u'ă', u'Ă', u'đ', u'Đ', u'ê', u'Ê', u'ô', u'Ô', u'ơ', u'Ơ', u'ư', u'Ư', u'á', u'Á', u'à',
+            u'À', u'ả', u'Ả', u'ã', u'Ã', u'ạ', u'Ạ',
+            u'ấ', u'Ấ', u'ầ', u'Ầ', u'ẩ', u'Ẩ', u'ẫ', u'Ẫ', u'ậ', u'Ậ', u'ắ', u'Ắ', u'ằ', u'Ằ', u'ẳ', u'Ẳ', u'ẵ',
+            u'Ẵ', u'ặ', u'Ặ',
+            u'é', u'É', u'è', u'È', u'ẻ', u'Ẻ', u'ẽ', u'Ẽ', u'ẹ', u'Ẹ', u'ế', u'Ế', u'ề', u'Ề', u'ể', u'Ể', u'ễ',
+            u'Ễ', u'ệ', u'Ệ', u'í', u'Í', u'ì', u'Ì', u'ỉ', u'Ỉ', u'ĩ', u'Ĩ', u'ị', u'Ị',
+            u'ó', u'Ó', u'ò', u'Ò', u'ỏ', u'Ỏ', u'õ', u'Õ', u'ọ', u'Ọ', u'ố', u'Ố', u'ồ', u'Ồ', u'ổ', u'Ổ', u'ỗ',
+            u'Ỗ', u'ộ', u'Ộ', u'ớ', u'Ớ', u'ờ', u'Ờ', u'ở', u'Ở', u'ỡ', u'Ỡ', u'ợ', u'Ợ',
+            u'ú', u'Ú', u'ù', u'Ù', u'ủ', u'Ủ', u'ũ', u'Ũ', u'ụ', u'Ụ', u'ứ', u'Ứ', u'ừ', u'Ừ', u'ử', u'Ử', u'ữ',
+            u'Ữ', u'ự', u'Ự', u'ỳ', u'Ỳ', u'ỷ', u'Ỷ', u'ỹ', u'Ỹ', u'ỵ', u'Ỵ', u'ý', u'Ý'
+        ]
+        _TCVN3 = [
+            u'©', u'¢', u'¨', u'¡', u'®', u'§', u'ª', u'£', u'«', u'¤', u'¬', u'¥', u'­', u'¦', u'¸', u'¸', u'µ',
+            u'µ', u'¶', u'¶', u'·', u'·', u'¹', u'¹',
+            u'Ê', u'Ê', u'Ç', u'Ç', u'È', u'È', u'É', u'É', u'Ë', u'Ë', u'¾', u'¾', u'»', u'»', u'¼', u'¼', u'½',
+            u'½', u'Æ', u'Æ',
+            u'Ð', u'Ð', u'Ì', u'Ì', u'Î', u'Î', u'Ï', u'Ï', u'Ñ', u'Ñ', u'Õ', u'Õ', u'Ò', u'Ò', u'Ó', u'Ó', u'Ô',
+            u'Ô', u'Ö', u'Ö', u'Ý', u'Ý', u'×', u'×', u'Ø', u'Ø', u'Ü', u'Ü', u'Þ', u'Þ',
+            u'ã', u'ã', u'ß', u'ß', u'á', u'á', u'â', u'â', u'ä', u'ä', u'è', u'è', u'å', u'å', u'æ', u'æ', u'ç',
+            u'ç', u'é', u'é', u'í', u'í', u'ê', u'ê', u'ë', u'ë', u'ì', u'ì', u'î', u'î',
+            u'ó', u'ó', u'ï', u'ï', u'ñ', u'ñ', u'ò', u'ò', u'ô', u'ô', u'ø', u'ø', u'õ', u'õ', u'ö', u'ö', u'÷',
+            u'÷', u'ù', u'ù', u'ú', u'ú', u'û', u'û', u'ü', u'ü', u'þ', u'þ', u'ý', u'ý'
+        ]
+        _KhongDau = [
+            u'a', u'A', u'a', u'A', u'd', u'D', u'e', u'E', u'o', u'O', u'o', u'O', u'u', u'U', u'a', u'A', u'a',
+            u'A', u'a', u'A', u'a', u'A', u'a', u'A',
+            u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a', u'A', u'a',
+            u'A', u'a', u'A',
+            u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', u'E', u'e', 'uE', u'e', u'E', u'e',
+            u'E', u'e', u'E', u'i', u'I', u'i', u'I', u'i', u'I', u'i', u'I', u'i', u'I',
+            u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o',
+            u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O', u'o', u'O',
+            u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u', u'U', u'u',
+            u'U', u'u', u'U', u'y', u'Y', u'y', u'Y', u'y', u'Y', u'y', u'Y', u'y', u'Y'
+        ]
+
+        if encoding_name == "TCVN (ABC)":
+            return _TCVN3
+        elif encoding_name == "Unicode":
+            return _Unicode
+        else:
+            return _KhongDau

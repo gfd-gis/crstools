@@ -211,12 +211,12 @@
        </item>
        <item>
         <property name="text">
-         <string>UTM Zone 48N - EPGS:32648</string>
+         <string>UTM Zone 48N - EPSG:32648</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>UTM Zone 49N - EPGS:32649</string>
+         <string>UTM Zone 49N - EPSG:32649</string>
         </property>
        </item>
        <item>
@@ -373,6 +373,9 @@
       <widget class="QListWidget" name="listWidget">
        <property name="enabled">
         <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::NoSelection</enum>
        </property>
       </widget>
      </item>
